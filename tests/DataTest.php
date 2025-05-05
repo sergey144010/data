@@ -5,6 +5,7 @@ namespace Units;
 use PHPUnit\Framework\TestCase;
 use Sergey144010\Data\Data;
 use Sergey144010\Data\CamelCustom;
+use Sergey144010\Data\Strategy\AddProperties;
 use Units\InterfaceModels\ModelClass;
 use Units\InterfaceModels\ModelClassTwo;
 use Units\InterfaceModels\ModelConstructor;
@@ -495,5 +496,22 @@ class DataTest extends TestCase
         self::assertEquals(12, $model->collection[0]->propertyTwo);
         self::assertEquals(21, $model->collection[1]->propertyOne);
         self::assertEquals(22, $model->collection[1]->propertyTwo);
+    }
+
+    public function testSimpleAddProperties(): void
+    {
+        $data = [
+            'one' => 1,
+            'two' => 2,
+        ];
+
+        $model = $this->data->toObject(
+            data: $data,
+            class: EmptyModel::class,
+            strategy: new AddProperties(),
+        );
+
+        self::assertEquals(1, $model->one);
+        self::assertEquals(2, $model->two);
     }
 }
