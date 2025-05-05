@@ -270,6 +270,83 @@ class ModelTwo implements ModelInterfaceBase
 }
 ```
 
+# About Strategy
+
+Есть несколько стратегий заполнения свойств объекта:
+- Через конструктор. Только свойства описанные в конструкторе попадут в объект. Strategy\Constructor.
+- Через публичные свойства объекта. Только свойства описанные как публичные свойства объекта попадут в объект. Strategy\Properties.
+- Сначала проверка есть ли что-то в конструкторе, а потом проверка публичных свойств. Strategy\StepByStep - по умолчанию.
+- Добавление всех входящих данных как публичные свойства объекта. Strategy\AddProperties.
+
+There are several strategies for filling object properties:
+- Via a constructor. Only properties described in the constructor will be included in the object. Strategy\Constructor.
+- Via public properties of the object. Only properties described as public properties of the object will be included in the object. Strategy\Properties.
+- First, check if there is something in the constructor, and then check the public properties. Strategy\StepByStep - by default.
+- Add all incoming data as public properties of the object. Strategy\AddProperties.
+
+# Examples strategy
+
+- Constructor
+```
+class SomeDto
+{
+    public function __construct(
+        readonly public string $propertyOne,
+    ) {
+    }
+}
+
+$dataService->toObject(
+    data:$data,
+    class: SomeDto::class,
+    strategy: new Strategy\Constructor()
+    );
+```
+
+- Public properties
+```
+class SomeDto
+{
+    public string $propertyOne;
+}
+
+$dataService->toObject(
+    data:$data,
+    class: SomeDto::class,
+    strategy: new Strategy\Properties()
+    );
+```
+
+- Combine Constructor and public properties
+```
+$dataService->toObject(
+    data:$data,
+    class: SomeDto::class,
+    strategy: new Strategy\StepByStep()
+);
+```
+
+- Simple add properties
+```
+class SomeDto
+{
+}
+
+$data = [
+    'one' => 1,
+    'two' => 2,
+]
+
+$dataService->toObject(
+    data:$data,
+    class: SomeDto::class,
+    strategy: new Strategy\AddProperties()
+);
+
+echo $data->one; // 1
+echo $data->two; // 2
+```
+
 # Code style, Static analyze, Tests
 Need checkout tests branch
 
