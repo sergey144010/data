@@ -188,13 +188,15 @@ final class Data
             $reflection->getProperty($parameter->getName())
                 ->setValue(
                     $object,
-                    $this->toObject(
-                        data: $preparedData[$parameter->getName()],
-                        class: $className,
-                        injectionMap: $injectionMap,
-                        currentProperty: $parameter->getName(),
-                        rootClass: $class
-                    )
+                    $preparedData[$parameter->getName()] === null
+                        ? null
+                        : $this->toObject(
+                            data: $preparedData[$parameter->getName()],
+                            class: $className,
+                            injectionMap: $injectionMap,
+                            currentProperty: $parameter->getName(),
+                            rootClass: $class
+                        )
                 );
         }
 
